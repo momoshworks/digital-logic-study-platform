@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة دراسة وإتقان تصميم المنطق الرقمي | Digital Logic Design Master (AI215)</title>
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Google Fonts: Cairo, Tajawal, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+</head>
+<body class="theme-dark">
+  <!-- Scroll Reading Progress Bar -->
+  <div id="scroll-progress-container">
+    <div id="scroll-progress-bar"></div>
+  </div>
+
+  <!-- App Main Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>تصميم المنطق الرقمي • AI215</h1>
+          <p class="subtitle">Digital Logic Design • أ.د. طارق حسن & د. نهى الصياد - حاسبات المنصورة</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Global Search -->
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search" placeholder="ابحث في الفصول، المتممات، خرائط كارنوف، الشيت..." autocomplete="off">
+          <button id="clear-search" class="clear-btn" style="display: none;">&times;</button>
+          <div id="search-results-dropdown" class="search-dropdown" style="display: none;"></div>
+        </div>
+
+        <!-- Overall Progress Pill -->
+        <div class="user-progress-badge" title="نسبة الإنجاز الإجمالية في المقرر">
+          <span class="badge-label">الإنجاز:</span>
+          <div class="mini-progress-track">
+            <div id="global-progress-fill" style="width: 0%;"></div>
+          </div>
+          <span id="global-progress-text" class="badge-val">0%</span>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle-btn" class="theme-toggle-btn" title="تبديل الوضع الليلي / الفاتح">
+          <span class="icon-sun">☀️</span>
+          <span class="icon-moon">🌙</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs Bar -->
+    <nav class="main-nav">
+      <div class="nav-container">
+        <button class="nav-tab active" data-tab="overview">
+          <span class="tab-icon">🏠</span>
+          <span class="tab-title">نظرة عامة والمنهج</span>
+        </button>
+        <button class="nav-tab" data-tab="ch1">
+          <span class="tab-icon">⚡</span>
+          <span class="tab-title">الفصل 1: الأنظمة والأعداد الثنائية</span>
+          <span class="tab-badge" id="badge-ch1">0%</span>
+        </button>
+        <button class="nav-tab" data-tab="ch2">
+          <span class="tab-icon">📐</span>
+          <span class="tab-title">الفصل 2: الجبر البولياني والبوابات</span>
+          <span class="tab-badge" id="badge-ch2">0%</span>
+        </button>
+        <button class="nav-tab" data-tab="ch3">
+          <span class="tab-icon">🗺️</span>
+          <span class="tab-title">الفصل 3: تبسيط الدوائر و K-Maps</span>
+          <span class="tab-badge" id="badge-ch3">0%</span>
+        </button>
+        <button class="nav-tab" data-tab="sheet1">
+          <span class="tab-icon">📑</span>
+          <span class="tab-title">شيت (1): مسائل نموذجية محلولة</span>
+          <span class="tab-badge" id="badge-sheet1">0%</span>
+        </button>
+        <button class="nav-tab" data-tab="flashcards">
+          <span class="tab-icon">🎴</span>
+          <span class="tab-title">بنك البطاقات (40+)</span>
+          <span class="tab-badge" id="badge-flashcards">0/40</span>
+        </button>
+        <button class="nav-tab" data-tab="lab">
+          <span class="tab-icon">🧪</span>
+          <span class="tab-title">المعمل والمحاكيات التفاعلية</span>
+        </button>
+        <button class="nav-tab" data-tab="exam">
+          <span class="tab-icon">🏆</span>
+          <span class="tab-title">محاكي الامتحان النهائي (AI215)</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Areas -->
+  <main class="app-main">
+
+    <!-- 1. Overview & Syllabus Pane -->
+    <section id="pane-overview" class="tab-pane active">
+      <div class="hero-banner">
+        <div class="hero-content">
+          <div class="hero-badge-row">
+            <span class="hero-pill">كود المقرر: AI215</span>
+            <span class="hero-pill">جامعة المنصورة - كلية الحاسبات والمعلومات</span>
+            <span class="hero-pill">قسم الذكاء الاصطناعي</span>
+            <span class="hero-pill">الفصل الدراسي الأول 2026-2027</span>
+          </div>
+          <h2 class="hero-title">منصة الإتقان الشاملة: تصميم المنطق الرقمي (Digital Logic Design)</h2>
+          <p class="hero-desc">
+            بوابتك الشاملة لفهم واستيعاب مادة المنطق الرقمي خطوة بخطوة. تغطي هذه المنصة الفصول الدراسية الثلاثة الأولى وشيت (1) بالكامل، مع شروحات عربية وافية، أمثلة رياضية محلولة بالتفصيل، اختبارات تفاعلية فورية لكل موضوع، بطاقات تذكر ذكية بنظام لايتنر، ومعامل رقمية لمحاكاة التحويلات العددية، المتممات، البوابات المنطقية، وخرائط كارنوف، مع محاكي امتحان نهائي وشهادة إتمام.
+          </p>
+
+          <div class="hero-stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">📚</div>
+              <div class="stat-val">3 فصول + شيت 1</div>
+              <div class="stat-label">محتوى أكاديمي شامل وموثق</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">❓</div>
+              <div class="stat-val">60+ سؤال</div>
+              <div class="stat-label">اختبارات تفاعلية مع الشرح الفوري</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🎴</div>
+              <div class="stat-val">40 بطاقة ذكية</div>
+              <div class="stat-label">للحفظ السريع والمراجعة الفعالة</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🧪</div>
+              <div class="stat-val">4 أدوات معملية</div>
+              <div class="stat-label">محاكيات تفاعلية للأنظمة والبوابات والـ K-Maps</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Cards: Instructors, Textbook, Grading -->
+      <div class="info-cards-grid">
+        <div class="info-card">
+          <div class="info-card-header">
+            <span style="font-size: 1.4rem;">👨‍🏫</span>
+            <h3>هيئة التدريس والمحاضرون</h3>
+          </div>
+          <div class="instructor-item">
+            <div class="instructor-avatar">🎓</div>
+            <div>
+              <strong>أ.م.د. طارق محمد حسن (Assoc. Prof. Dr. Tarek M. Hassan)</strong>
+              <p>وكيل الكلية لشؤون التعليم والطلاب - كلية الحاسبات والمعلومات - جامعة المنصورة</p>
+            </div>
+          </div>
+          <div class="instructor-item">
+            <div class="instructor-avatar">👩‍🏫</div>
+            <div>
+              <strong>د. نهى عماد الصياد (Dr. Noha Emad Alsayad)</strong>
+              <p>مدرس بقسم الذكاء الاصطناعي - كلية الحاسبات والمعلومات - جامعة المنصورة</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-header">
+            <span style="font-size: 1.4rem;">📖</span>
+            <h3>الكتاب المرجعي المعتمد (Textbook)</h3>
+          </div>
+          <p style="font-size: 0.92rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+            <strong>Digital Design</strong> (Fourth Edition)
+          </p>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+            Authors: <strong>M. Morris Mano & Michael D. Ciletti</strong><br>
+            Publisher: Prentice Hall / Pearson International
+          </p>
+          <div class="tip-box" style="margin: 0; padding: 0.8rem; font-size: 0.82rem;">
+            💡 يعتبر كتاب موريس مانو هو المرجع العالمي الأهم والمعتمد في كبرى كليات الهندسة والحاسبات لتدريس تصميم المنطق الرقمي والمعمارية.
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-header">
+            <span style="font-size: 1.4rem;">📊</span>
+            <h3>توزيع درجات المقرر (Grading Scheme)</h3>
+          </div>
+          <table class="grading-table">
+            <tbody>
+              <tr>
+                <td>الامتحان التحريري النهائي (Final Written Exam)</td>
+                <td class="grade-val">60 درجة (60%)</td>
+              </tr>
+              <tr>
+                <td>امتحان منتصف الفصل الدراسي (Midterm Exam)</td>
+                <td class="grade-val">15 درجة (15%)</td>
+              </tr>
+              <tr>
+                <td>الامتحان العملي والمعمل (Practical Exam & Lab)</td>
+                <td class="grade-val">15 درجة (15%)</td>
+              </tr>
+              <tr>
+                <td>أعمال السنة والأنشطة والشيتات (Assignments & Quizzes)</td>
+                <td class="grade-val">10 درجات (10%)</td>
+              </tr>
+              <tr>
+                <td>المجموع الكلي (Total)</td>
+                <td class="grade-val" style="color: var(--accent-cyan); font-size: 1rem;">100 درجة (100%)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Quick Chapters Roadmap -->
+      <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-primary); margin-bottom: 1.2rem;">
+        🚀 خطة المنهج والموضوعات الدراسية
+      </h3>
+      <div class="info-cards-grid">
+        <div class="info-card" style="border-top: 4px solid var(--accent-cyan); cursor: pointer;" onclick="app.switchTab('ch1')">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+          <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.4rem;">الفصل الأول: الأنظمة الرقمية والأعداد الثنائية</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem;">
+            التحويلات بين القواعد، المتممات وطرق الطرح، الأعداد ذات الإشارة، كشف الـ Overflow، والمنطق الثنائي.
+          </p>
+          <span style="font-size: 0.82rem; color: var(--accent-cyan); font-weight: 700;">ابدأ دراسة الفصل الأول ←</span>
+        </div>
+
+        <div class="info-card" style="border-top: 4px solid var(--accent-purple); cursor: pointer;" onclick="app.switchTab('ch2')">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📐</div>
+          <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.4rem;">الفصل الثاني: الجبر البولياني والبوابات</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem;">
+            مسلمات هنتنغتون، مبدأ الثنائية، قوانين ديمورجان، المينتيرمز والماكستيرمز، الـ 16 دالة ثنائية وبواباتها.
+          </p>
+          <span style="font-size: 0.82rem; color: var(--accent-purple); font-weight: 700;">ابدأ دراسة الفصل الثاني ←</span>
+        </div>
+
+        <div class="info-card" style="border-top: 4px solid var(--accent-yellow); cursor: pointer;" onclick="app.switchTab('ch3')">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🗺️</div>
+          <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.4rem;">الفصل الثالث: تبسيط الدوائر و K-Maps</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem;">
+            خرائط كارنوف لـ 2 و 3 و 4 متغيرات، الأركان الأربعة، المتضمنات الأساسية EPIs، البوابات الشاملة NAND/NOR.
+          </p>
+          <span style="font-size: 0.82rem; color: var(--accent-yellow); font-weight: 700;">ابدأ دراسة الفصل الثالث ←</span>
+        </div>
+
+        <div class="info-card" style="border-top: 4px solid var(--accent-green); cursor: pointer;" onclick="app.switchTab('sheet1')">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📑</div>
+          <h4 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.4rem;">شيت (1): تمارين ومسائل محلولة بالتفصيل</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem;">
+            حلول نموذجية خطوة بخطوة للـ 10 مسائل الرسمية للشيت الأول بالجمع والضرب المباشر والمتممات وسعات الذاكرة.
+          </p>
+          <span style="font-size: 0.82rem; color: var(--accent-green); font-weight: 700;">استعرض حلول الشيت كاملاً ←</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Chapter 1 Pane -->
+    <section id="pane-ch1" class="tab-pane">
+      <div class="chapter-layout">
+        <aside class="chapter-sidebar">
+          <h4>فهرس الفصل الأول</h4>
+          <ul class="sidebar-nav-list" id="sidebar-nav-ch1"></ul>
+        </aside>
+        <div class="chapter-content-body" id="content-ch1"></div>
+      </div>
+    </section>
+
+    <!-- 3. Chapter 2 Pane -->
+    <section id="pane-ch2" class="tab-pane">
+      <div class="chapter-layout">
+        <aside class="chapter-sidebar">
+          <h4>فهرس الفصل الثاني</h4>
+          <ul class="sidebar-nav-list" id="sidebar-nav-ch2"></ul>
+        </aside>
+        <div class="chapter-content-body" id="content-ch2"></div>
+      </div>
+    </section>
+
+    <!-- 4. Chapter 3 Pane -->
+    <section id="pane-ch3" class="tab-pane">
+      <div class="chapter-layout">
+        <aside class="chapter-sidebar">
+          <h4>فهرس الفصل الثالث</h4>
+          <ul class="sidebar-nav-list" id="sidebar-nav-ch3"></ul>
+        </aside>
+        <div class="chapter-content-body" id="content-ch3"></div>
+      </div>
+    </section>
+
+    <!-- 5. Sheet 1 Pane -->
+    <section id="pane-sheet1" class="tab-pane">
+      <div class="chapter-layout">
+        <aside class="chapter-sidebar">
+          <h4>فهرس شيت (1)</h4>
+          <ul class="sidebar-nav-list" id="sidebar-nav-sheet1"></ul>
+        </aside>
+        <div class="chapter-content-body" id="content-sheet1"></div>
+      </div>
+    </section>
+
+    <!-- 6. Flashcards Pane -->
+    <section id="pane-flashcards" class="tab-pane">
+      <div class="flashcards-container">
+        <div class="flashcards-toolbar">
+          <div class="filter-pills-row">
+            <button class="filter-pill active" data-filter="all">الكل (40)</button>
+            <button class="filter-pill" data-filter="Chapter 1">الفصل 1</button>
+            <button class="filter-pill" data-filter="Chapter 2">الفصل 2</button>
+            <button class="filter-pill" data-filter="Chapter 3">الفصل 3</button>
+            <button class="filter-pill" data-filter="Sheet 1">شيت 1</button>
+          </div>
+          <div style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--accent-cyan);">
+            بطاقة <span id="fc-current-idx">1</span> من <span id="fc-total-count">40</span>
+          </div>
+        </div>
+
+        <div class="flashcard-progress-bar-wrap">
+          <div id="fc-progress-fill" class="flashcard-progress-fill" style="width: 0%;"></div>
+        </div>
+
+        <!-- 3D Card Scene -->
+        <div id="flashcard-card" class="flashcard-3d-scene" onclick="app.flipFlashcard()">
+          <div class="flashcard-inner">
+            <div class="flashcard-face flashcard-front">
+              <span id="fc-category-badge" class="flashcard-category-badge">Chapter 1</span>
+              <div id="fc-front-text" class="flashcard-content-text">اضغط لقلب البطاقة ومعرفة الإجابة</div>
+              <span class="flashcard-flip-hint">🔄 انقر للقلب أو اضغط مسافة (Space)</span>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <span class="flashcard-category-badge" style="color: var(--accent-green);">الإجابة والشرح</span>
+              <div id="fc-back-text" class="flashcard-content-text">الشرح النموذجي للبطاقة يظهر هنا</div>
+              <span class="flashcard-flip-hint">🔄 انقر للعودة للسؤال</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flashcard-controls-row">
+          <button class="flashcard-btn-action btn-review" onclick="app.markFlashcardReview()">
+            <span>⚠️</span> تحتاج مراجعة
+          </button>
+          <div class="nav-arrows-group">
+            <button class="btn-arrow" onclick="app.prevFlashcard()" title="السابق (السهم الأيمن)">→</button>
+            <button class="btn-arrow" onclick="app.nextFlashcard()" title="التالي (السهم الأيسر)">←</button>
+          </div>
+          <button class="flashcard-btn-action btn-mastered" onclick="app.markFlashcardMastered()">
+            <span>✅</span> أتقنتها تماماً
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Interactive Lab Tools Pane -->
+    <section id="pane-lab" class="tab-pane">
+      <div class="lab-tools-grid">
+
+        <!-- Tool 1: Base Converter -->
+        <div class="lab-card">
+          <div class="lab-card-header">
+            <h3><span>🔢</span> محول الأنظمة العددية والكسور مع الخطوات الحسابية (Base Converter)</h3>
+            <span class="hero-pill">الأداة 1</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            أدخل أي عدد في أي أساس (مع دعم الأعداد الكسرية مثل 41.6875 أو 10110.0101 أو 2E.8)، واختر الأساس المطلوب لرؤية الناتج مع تفصيل خطوات القسمة والضرب المتكرر.
+          </p>
+
+          <div class="lab-form-grid">
+            <div class="form-group">
+              <label>العدد المراد تحويله (Input Number):</label>
+              <input type="text" id="lab-conv-input" class="form-control" value="41.6875" placeholder="مثال: 41.6875 أو FAFA">
+            </div>
+            <div class="form-group">
+              <label>الأساس الحالي للعدد (From Base):</label>
+              <select id="lab-conv-from" class="form-control">
+                <option value="10" selected>العشري (Decimal - 10)</option>
+                <option value="2">الثنائي (Binary - 2)</option>
+                <option value="8">الثماني (Octal - 8)</option>
+                <option value="16">الست عشري (Hexadecimal - 16)</option>
+                <option value="5">الأساس 5 (Base 5)</option>
+                <option value="12">الأساس 12 (Base 12)</option>
+                <option value="13">الأساس 13 (Base 13)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>الأساس المراد التحويل إليه (To Base):</label>
+              <select id="lab-conv-to" class="form-control">
+                <option value="2" selected>الثنائي (Binary - 2)</option>
+                <option value="8">الثماني (Octal - 8)</option>
+                <option value="10">العشري (Decimal - 10)</option>
+                <option value="16">الست عشري (Hexadecimal - 16)</option>
+                <option value="5">الأساس 5 (Base 5)</option>
+                <option value="12">الأساس 12 (Base 12)</option>
+                <option value="13">الأساس 13 (Base 13)</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn-primary-action" onclick="app.runBaseConverter()">نفّذ التحويل واعرض الخطوات بالتفصيل 🚀</button>
+
+          <div id="lab-conv-result-zone" class="calc-output-zone">
+            <h4 style="color: var(--accent-green); margin-bottom: 0.5rem;">النتيجة النهائية:</h4>
+            <div id="lab-conv-final-val" class="code-calc" style="font-size: 1.15rem; font-weight: 800;"></div>
+            <h4 style="color: var(--accent-cyan); margin: 1rem 0 0.5rem;">الخطوات الرياضية التفصيلية:</h4>
+            <div id="lab-conv-steps" class="code-calc"></div>
+          </div>
+        </div>
+
+        <!-- Tool 2: Complements & Subtraction Calculator -->
+        <div class="lab-card">
+          <div class="lab-card-header">
+            <h3><span>🔄</span> حاسبة المتممات وعمليات الطرح الموضحة (Complements & Subtraction)</h3>
+            <span class="hero-pill">الأداة 2</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            أدخل المطروح منه M والمطروح N في النظام العشري أو الثنائي، وشاهد حساب متممات (r-1) و r وتحليل الـ End Carry خطوة بخطوة.
+          </p>
+
+          <div class="lab-form-grid">
+            <div class="form-group">
+              <label>النظام العددي:</label>
+              <select id="lab-comp-base" class="form-control" onchange="app.updateCompPlaceholders()">
+                <option value="10" selected>النظام العشري (متمم 9 و 10)</option>
+                <option value="2">النظام الثنائي (متمم 1 و 2)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>عدد الخانات الإجمالي (n Digits):</label>
+              <input type="number" id="lab-comp-digits" class="form-control" value="5" min="2" max="16">
+            </div>
+            <div class="form-group">
+              <label>العدد الأول المطروح منه (M):</label>
+              <input type="text" id="lab-comp-m" class="form-control" value="72532">
+            </div>
+            <div class="form-group">
+              <label>العدد الثاني المطروح (N):</label>
+              <input type="text" id="lab-comp-n" class="form-control" value="03250">
+            </div>
+          </div>
+
+          <button class="btn-primary-action" onclick="app.runComplementsCalculator()">احسب المتممات ونفّذ الطرح بالخطوات ⚡</button>
+
+          <div id="lab-comp-result-zone" class="calc-output-zone">
+            <div id="lab-comp-output" class="code-calc"></div>
+          </div>
+        </div>
+
+        <!-- Tool 3: Logic Gates Simulator -->
+        <div class="lab-card">
+          <div class="lab-card-header">
+            <h3><span>🚪</span> معمل محاكاة البوابات المنطقية وجدول الحقيقة الحي (Logic Gate Simulator)</h3>
+            <span class="hero-pill">الأداة 3</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            اختر نوع البوابة الرقمية، وغيّر حالة المفاتيح A و B لرؤية الدائرة تنير وجدول الحقيقة يبرز الصف النشط في الوقت الفعلي!
+          </p>
+
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <button class="filter-pill active" onclick="app.selectGate('AND')">AND</button>
+            <button class="filter-pill" onclick="app.selectGate('OR')">OR</button>
+            <button class="filter-pill" onclick="app.selectGate('NOT')">NOT (Inverter)</button>
+            <button class="filter-pill" onclick="app.selectGate('NAND')">NAND</button>
+            <button class="filter-pill" onclick="app.selectGate('NOR')">NOR</button>
+            <button class="filter-pill" onclick="app.selectGate('XOR')">XOR (Odd)</button>
+            <button class="filter-pill" onclick="app.selectGate('XNOR')">XNOR (Equiv)</button>
+            <button class="filter-pill" onclick="app.selectGate('BUFFER')">Buffer</button>
+          </div>
+
+          <div class="gate-sim-container">
+            <div class="gate-visual-col">
+              <div class="gate-inputs-switches">
+                <button id="gate-sw-a" class="switch-toggle-btn" onclick="app.toggleGateSwitch('a')">مدخل A: 0</button>
+                <button id="gate-sw-b" class="switch-toggle-btn" onclick="app.toggleGateSwitch('b')">مدخل B: 0</button>
+              </div>
+
+              <!-- Interactive SVG of Gate -->
+              <div class="gate-svg-wrap" id="gate-svg-container"></div>
+
+              <div class="gate-output-lamp" id="gate-output-indicator">
+                💡 الخرج: <strong id="gate-out-val" style="color: var(--text-secondary);">0 (OFF)</strong>
+              </div>
+              <div id="gate-formula-disp" style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--accent-cyan); margin-top: 0.5rem;">
+                F = A · B
+              </div>
+            </div>
+
+            <div class="gate-table-col">
+              <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">جدول الحقيقة المباشر (Truth Table):</h4>
+              <table class="gate-truth-table" id="gate-truth-table"></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tool 4: K-Map Solver -->
+        <div class="lab-card">
+          <div class="lab-card-header">
+            <h3><span>🗺️</span> محلل ومبسط خرائط كارنوف التفاعلي (Interactive K-Map Solver)</h3>
+            <span class="hero-pill">الأداة 4</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            اختر عدد المتغيرات (2 أو 3 أو 4)، وانقر على أي خلية في الخريطة للتبديل بين 0 و 1 و X (Don't Care)، وشاهد الدالة المبسطة بصيغة SOP فوراً!
+          </p>
+
+          <div class="kmap-solver-controls">
+            <div class="form-group" style="margin: 0;">
+              <label>عدد المتغيرات:</label>
+              <select id="kmap-vars-select" class="form-control" onchange="app.changeKmapVars()">
+                <option value="2">متغيران (x, y - 4 مربعات)</option>
+                <option value="3" selected>3 متغيرات (x, y, z - 8 مربعات)</option>
+                <option value="4">4 متغيرات (w, x, y, z - 16 مربعاً)</option>
+              </select>
+            </div>
+            <button class="filter-pill" onclick="app.resetKmap(0)">مسح الكل (أصفار)</button>
+            <button class="filter-pill" onclick="app.presetKmap('corners')">مثال الأركان الأربعة (Four Corners)</button>
+            <button class="filter-pill" onclick="app.presetKmap('sheet1')">مثال الشيت</button>
+          </div>
+
+          <div class="kmap-interactive-grid" id="kmap-interactive-grid-wrap"></div>
+
+          <div class="solver-result-badge">
+            <div><strong>مجموع المينتيرمز:</strong> <span id="kmap-minterms-disp">F = ∑ m(...)</span></div>
+            <div style="margin-top: 0.5rem;"><strong>التعبير التبسيطي النهائي (Minimized SOP):</strong> <span id="kmap-minimized-expr" style="font-size: 1.2rem; color: var(--accent-yellow);">0</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 8. Comprehensive Exam Simulator Pane -->
+    <section id="pane-exam" class="tab-pane">
+      <!-- Exam Introduction Screen -->
+      <div id="exam-intro-screen" class="exam-intro-card">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🏆</div>
+        <h2>محاكي الاختبار النهائي الشامل: تصميم المنطق الرقمي (AI215)</h2>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 1.5rem;">
+          اختبار إلكتروني يحاكي مواصفات امتحان نهاية الفصل الدراسي بكلية الحاسبات والمعلومات جامعة المنصورة. يقيس فهمك المتعمق للأنظمة الرقمية، الجبر البولياني، خرائط كارنوف، وحلول الشيتات.
+        </p>
+
+        <div class="exam-instructions">
+          <h4 style="color: var(--accent-yellow); margin-bottom: 0.5rem;">تعليمات وقواعد الاختبار:</h4>
+          <ul style="margin-right: 1.2rem; line-height: 1.8;">
+            <li>عدد الأسئلة: <strong>30 سؤالاً موضوعياً اختيار من متعدد</strong> يغطي كافة جوانب المقرر.</li>
+            <li>الزمن المتاح: <strong>40 دقيقة</strong> مع مؤقت تنازلي ذكي.</li>
+            <li>يمكنك مراجعة أي سؤال وتعديل إجابتك أو وضع علامة مراجعة (Flag) قبل التسليم.</li>
+            <li>عند الانتهاء ستحصل على تقرير تفصيلي لدرجاتك مع مراجعة كاملة للأخطاء وشرح كل سؤال، بالإضافة إلى <strong>شهادة إتمام معتمدة قابلة للطباعة</strong>.</li>
+          </ul>
+        </div>
+
+        <div style="max-width: 380px; margin: 1.5rem auto;">
+          <label style="display: block; font-size: 0.88rem; color: var(--text-primary); margin-bottom: 0.4rem; font-weight: 700;">
+            أدخل اسمك الكريم (ليظهر في الشهادة الرسمية):
+          </label>
+          <input type="text" id="exam-student-name" class="form-control" placeholder="اسمك الثلاثي باللغة العربية أو الإنجليزية" style="text-align: center; font-size: 1rem;">
+        </div>
+
+        <button class="btn-primary-action" style="font-size: 1.1rem; padding: 0.85rem 2.5rem;" onclick="app.startExam()">
+          ابدأ الاختبار النهائي الآن ⏱️
+        </button>
+      </div>
+
+      <!-- Active Exam Interface -->
+      <div id="exam-active-screen" class="exam-active-container">
+        <!-- Question Column -->
+        <div class="exam-left-col">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.2rem;">
+            <div style="font-weight: 800; color: var(--accent-cyan); font-family: var(--font-mono);">
+              سؤال <span id="exam-curr-q-num">1</span> من <span id="exam-total-q-num">30</span>
+            </div>
+            <button id="exam-flag-btn" class="filter-pill" onclick="app.toggleFlagCurrentQuestion()">
+              🚩 مراجعة لاحقاً
+            </button>
+          </div>
+
+          <div id="exam-q-text" class="question-text" style="font-size: 1.1rem; margin-bottom: 1.2rem;"></div>
+
+          <div id="exam-options-container" class="options-list"></div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+            <button class="btn-arrow" style="width: auto; padding: 0.6rem 1.2rem;" onclick="app.prevExamQuestion()">السابق</button>
+            <button class="btn-arrow" style="width: auto; padding: 0.6rem 1.2rem;" onclick="app.nextExamQuestion()">التالي</button>
+          </div>
+        </div>
+
+        <!-- Sidebar Palette & Timer -->
+        <div class="exam-right-col">
+          <div class="exam-timer-box">
+            <span style="font-size: 0.8rem; color: var(--text-secondary);">الوقت المتبقي:</span>
+            <div id="exam-timer" class="timer-digits">40:00</div>
+          </div>
+
+          <h4 style="font-size: 0.88rem; color: var(--text-primary); margin-bottom: 0.5rem;">خريطة الأسئلة (Question Palette):</h4>
+          <div id="exam-palette" class="palette-grid"></div>
+
+          <button class="btn-primary-action" style="width: 100%; margin-top: 1.5rem; background: var(--accent-green);" onclick="app.submitExam()">
+            تسليم الإجابات وإنهاء الاختبار 🏁
+          </button>
+        </div>
+      </div>
+
+      <!-- Exam Result & Certificate Screen -->
+      <div id="exam-result-screen" class="exam-result-card">
+        <h2 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">نتيجة الاختبار النهائي</h2>
+        <p id="exam-result-greeting" style="color: var(--text-secondary);"></p>
+
+        <div class="score-circle-wrap">
+          <span id="exam-score-val" class="score-val">0%</span>
+          <span id="exam-score-fraction" class="score-total">0 / 30</span>
+        </div>
+
+        <div id="exam-grade-badge" style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem;"></div>
+
+        <!-- Certificate Container -->
+        <div class="certificate-preview-box" id="certificate-box">
+          <div class="cert-header">
+            <h3>جامعة المنصورة - كلية الحاسبات والمعلومات</h3>
+            <p style="color: #64748b; font-size: 0.85rem; font-weight: 600;">قسم الذكاء الاصطناعي • منصة دراسة المنطق الرقمي</p>
+          </div>
+          <h2 style="font-size: 1.5rem; color: #0284c7; margin: 0.8rem 0;">شهادة تفوق وإتمام مقرر</h2>
+          <p style="font-size: 0.95rem; color: #334155;">تشهد المنصة بأن الطالب / الطالبة المتميز(ة):</p>
+          <div id="cert-student-name-disp" class="cert-student-name">اسم الطالب</div>
+          <p style="font-size: 0.92rem; color: #334155; max-width: 600px; margin: 0.5rem auto;">
+            قد اجتاز(ت) بنجاح محاكي الاختبار النهائي الشامل لمقرر <strong>تصميم المنطق الرقمي (Digital Logic Design - AI215)</strong> وأظهر(ت) إتقاناً متميزاً لمفاهيم الأنظمة الرقمية، الجبر البولياني، خرائط كارنوف وتطبيقاتها العملية.
+          </p>
+
+          <div class="cert-meta-grid">
+            <div>
+              <strong>الدرجة المحققة:</strong> <span id="cert-score-disp">0%</span>
+            </div>
+            <div>
+              <strong>تاريخ الإنجاز:</strong> <span id="cert-date-disp">2026/11/09</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+          <button class="btn-primary-action" onclick="window.print()">طباعة الشهادة الرسمية 🖨️</button>
+          <button class="filter-pill" style="padding: 0.7rem 1.4rem;" onclick="app.retakeExam()">إعادة الاختبار 🔄</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- App Footer -->
+  <footer class="app-footer">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <p style="font-weight: 700; color: var(--text-primary); margin-bottom: 0.4rem;">
+        منصة دراسة وإتقان تصميم المنطق الرقمي (AI215) • جامعة المنصورة
+      </p>
+      <p style="margin-bottom: 0.6rem;">
+        إشراف: أ.م.د. طارق محمد حسن (وكيل الكلية) & د. نهى عماد الصياد (قسم الذكاء الاصطناعي) • المرجع: M. Morris Mano 4th Ed.
+      </p>
+      <p style="font-size: 0.78rem;">
+        تم تطوير المنصة بأحدث تقنيات الويب التفاعلية لخدمة طلاب كلية الحاسبات والمعلومات والذكاء الاصطناعي.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts: Data & Engine -->
+  <script src="lectures-data.js"></script>
+  <script src="quiz-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
